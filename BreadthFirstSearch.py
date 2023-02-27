@@ -2,18 +2,16 @@ from tkinter import CURRENT
 from pyMaze import maze, agent, COLOR, textLabel
 import time
 
-
-def DFS(m, start_cell = None):
-    #start_time = time.time()
+def BFS(m, start_cell = None):
     if start_cell is None:
         start = (m.rows, m.cols)
     explored = [start]
     frontier = [start]
-    dfsPath = {}
-    dfsSearch = []
+    bfsPath = {}
+    bfsSearch = []
     while len(frontier)>0:
-        currentCell = frontier.pop()
-        dfsSearch.append(currentCell)
+        currentCell = frontier.pop(0)
+        bfsSearch.append(currentCell)
         if currentCell==(1,1):
             break
         for d in 'ESNW':
@@ -30,22 +28,19 @@ def DFS(m, start_cell = None):
                     continue
                 explored.append(childCell)
                 frontier.append(childCell)
-                dfsPath[childCell]=currentCell
+                bfsPath[childCell]=currentCell
     forwardPath = {}
     cell = m._goal
     while cell != start:
-        forwardPath[dfsPath[cell]] = cell
-        cell = dfsPath[cell]
-    elapsed_time = time.time() - start_time
-    return dfsSearch, dfsPath, forwardPath#, elapsed_time
-
+        forwardPath[bfsPath[cell]] = cell
+        cell = bfsPath[cell]
+    return bfsSearch, bfsPath, forwardPath
 
 if __name__ == '__main__':
     start_time = time.time()
     m = maze(20, 20)
     m.CreateMaze(loadMaze='maze--2023-02-27--10-57-01.csv') # loop percentage = 50% 
-    # print(f"open and close grid paths in the maze are {m.maze_map}")
-    searchSpace, reversePath, forwardPath = DFS(m)
+    searchSpace, reversePath, forwardPath = BFS(m)
     a = agent(m, footprints=True, shape='square', color = COLOR.blue)
     b = agent(m, 1, 1, goal=(20, 20), footprints=True, filled=True, color = COLOR.cyan)
     c = agent(m, footprints=True, color=COLOR.yellow)
@@ -53,7 +48,5 @@ if __name__ == '__main__':
     m.tracePath({b:reversePath})
     m.tracePath({c:forwardPath})
     elapsed_time = time.time() - start_time
-    time = textLabel(m, "Timetaken to solve the 20X20 maze, using DFS algorithm is ", elapsed_time)
-    #print(f"timetaken to solve the 20X20 maze, using DFS algorithm is {time_taken}")
-
+    time = textLabel(m, "Timetaken to solve the 20X20 maze, using BFS algorithm is ", elapsed_time)
     m.run()
