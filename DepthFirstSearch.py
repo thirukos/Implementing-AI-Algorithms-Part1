@@ -54,6 +54,8 @@ if __name__ == '__main__':
     m.tracePath({c:forwardPath})
     elapsed_time = time.time() - start_time
     time = textLabel(m, "Timetaken to solve the 20X20 maze, using DFS algorithm is ", elapsed_time)
+    pathLength = textLabel(m, "Length of the path ", len(forwardPath)+1)
+    searchSpace = textLabel(m, "Total cells searched ", len(searchSpace)+1)
     #print(f"timetaken to solve the 20X20 maze, using DFS algorithm is {time_taken}")
 
     m.run()

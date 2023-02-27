@@ -10,12 +10,13 @@ m = maze()
 # loadMaze = "xxx.csv" 
 m.CreateMaze()
 a = agent(m, footprints=True)
-print(a.x)
-print(a.y)
-print(a.position)
+#print(a.x)
+#print(a.y)
+#print(a.position)
+print(m.grid)
 
 # m.enableArrowKey(a) - to use arraow keys to move the agent
 
-m.tracePath({a: m.path}, delay=100, ) #shortest path solution 
+#m.tracePath({a: m.path}, delay=100, ) #shortest path solution 
 
 m.run()
