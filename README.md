@@ -1,8 +1,8 @@
 # AI-project1
 - demo.py, to play with the maze generation code
-- DepthFirstSearch, to implement DFS algorithm (uninformed search)
-- BreadthFirstSearch, to implement BFS algorithm (uninformed search)
-- Astar, to implement Astart algorithm (informed search)
+- DepthFirstSearch.py, to implement DFS algorithm (uninformed search)
+- BreadthFirstSearch.py, to implement BFS algorithm (uninformed search)
+- Astar.py, to implement Astart algorithm (informed search)
 
 
 reference:
