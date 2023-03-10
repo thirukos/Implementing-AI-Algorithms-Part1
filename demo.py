@@ -29,20 +29,23 @@ m.CreateMaze()
 #            print('ok')
 
 #targetKey = m.maze_map[(7,1)]
-cells = list(m.maze_map)
-start_cell = list(m.maze_map.keys())[-1]
-target_cell = list(m.maze_map.keys())[0]
-print(start_cell)
-print(target_cell)
-print(m.maze_map[(4,4)])
+#cells = list(m.maze_map)
+#start_cell = list(m.maze_map.keys())[-1]
+#target_cell = list(m.maze_map.keys())[0]
+#print(start_cell)
+#print(target_cell)
+#print(m.maze_map[(4,4)])
 
-actions = []
-for direction, Bool in m.maze_map[(4,4)].items():
-    if Bool ==1:
-        actions.append(direction)
-print(actions)
+#actions = []
+#for direction, Bool in m.maze_map[(4,4)].items():
+#    if Bool ==1:
+#        actions.append(direction)
+#print(actions)
 
-#print(m.maze_map[(1,1)])
+for i, j in m.maze_map.items():
+    print(i)
+
+#print(m.maze_map)
 #for direction,v in targetKey.items():
 #    print(direction)
 #    print(v)
