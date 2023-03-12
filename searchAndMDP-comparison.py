@@ -9,19 +9,19 @@ from memory_profiler import memory_usage
 
 
 def run_policy_iteration(myMaze):
-    return policy_iteration(myMaze, discount_factor=0.9, threshold=1e-3)
+    return policy_iteration(myMaze, discount_factor=0.5, threshold=1e-3)
 
 def run_value_iteration(myMaze):
     return value_iteration(myMaze, discount_factor=0.9, threshold=1e-3)
 
 
 if __name__ == '__main__':
-    myMaze = maze(30, 30)
-    myMaze.CreateMaze(loadMaze="maze--2023-03-09--11-37-25.csv") # loop percentage = 80% 
+    myMaze = maze()
+    myMaze.CreateMaze(loadMaze="maze--2023-03-12--09-33-14.csv") # loop percentage = 80% 
 
     bfs_searchSpace, bfs_reversePath, bfs_forwardPath = BFS(myMaze)
     dfs_searchSpace, dfs_reversePath, dfs_forwardPath = DFS(myMaze)
-    astar_searchSpace, astar_reversePath, astar_forwardPath = Astar(myMaze)
+    astar_searchSpace, astar_reversePath, astar_forwardPath = Astar(myMaze, heuristics="Manhattan")
     policyI_forwardPath, policyI_iteration = run_policy_iteration(myMaze)
     valueI_forwardPath, valueI_iteration = run_value_iteration(myMaze)
     
@@ -38,11 +38,11 @@ if __name__ == '__main__':
     myMaze.tracePath({agent_valueI:valueI_forwardPath}, delay=100)
 
     #path length
-    bfs_pathLength = textLabel(myMaze, "BFS PathLength ", len(bfs_forwardPath)+1)
-    dfs_pathLength = textLabel(myMaze, "DFS PathLength ", len(dfs_forwardPath)+1)
-    astar_pathLength = textLabel(myMaze, "Astar PathLength ", len(astar_forwardPath)+1)
-    policyI_pathLength = textLabel(myMaze, "MDP-PolicyIter PathLength ", len(policyI_forwardPath)+1)
-    valueI_pathLength = textLabel(myMaze, "MDP-ValueIter PathLength ", len(valueI_forwardPath)+1)
+    #bfs_pathLength = textLabel(myMaze, "BFS PathLength ", len(bfs_forwardPath))
+    #dfs_pathLength = textLabel(myMaze, "DFS PathLength ", len(dfs_forwardPath))
+    #astar_pathLength = textLabel(myMaze, "Astar PathLength ", len(astar_forwardPath))
+    #policyI_pathLength = textLabel(myMaze, "MDP-PolicyIter PathLength ", len(policyI_forwardPath))
+    #valueI_pathLength = textLabel(myMaze, "MDP-ValueIter PathLength ", len(valueI_forwardPath))
 
     #time
     #bfs_time = textLabel(myMaze, "BFS timetaken: ", timeit(stmt = "BFS(myMaze)", number = 10, globals = globals()))
@@ -58,10 +58,10 @@ if __name__ == '__main__':
     policyI_memory_usage = memory_usage((run_policy_iteration, (myMaze,), {}))
     valueI_memory_usage = memory_usage((run_value_iteration, (myMaze,), {}))
 
-    bfs_memory_label = textLabel(myMaze, "BFS max memory usage: ", f"{max(bfs_memory):.2f} MB")
-    dfs_memory_label = textLabel(myMaze, "DFS max memory usage: ", f"{max(dfs_memory):.2f} MB")
-    astar_memory_label = textLabel(myMaze, "Astar max memory usage: ", f"{max(astar_memory):.2f} MB")
-    policyI_memory = textLabel(myMaze, "MDP-PolicyIter memory usage: ", f"{max(policyI_memory_usage):.2f} MB")
-    valueI_memory = textLabel(myMaze, "MDP-ValueIter memory usage: ", f"{max(valueI_memory_usage):.2f} MB")
+    #bfs_memory_label = textLabel(myMaze, "BFS max memory usage: ", f"{max(bfs_memory):.2f} MB")
+    #dfs_memory_label = textLabel(myMaze, "DFS max memory usage: ", f"{max(dfs_memory):.2f} MB")
+    #astar_memory_label = textLabel(myMaze, "Astar max memory usage: ", f"{max(astar_memory):.2f} MB")
+    #policyI_memory = textLabel(myMaze, "MDP-PolicyIter memory usage: ", f"{max(policyI_memory_usage):.2f} MB")
+    #valueI_memory = textLabel(myMaze, "MDP-ValueIter memory usage: ", f"{max(valueI_memory_usage):.2f} MB")
 
     myMaze.run()

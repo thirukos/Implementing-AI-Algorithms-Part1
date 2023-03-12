@@ -7,8 +7,8 @@ from memory_profiler import memory_usage
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    myMaze = maze(30, 30)
-    myMaze.CreateMaze(loadMaze="maze--2023-03-09--11-37-25.csv") # loop percentage = 80% 
+    myMaze = maze()
+    myMaze.CreateMaze(loadMaze="maze--2023-03-12--09-33-14.csv") # loop percentage = 80% 
 
     bfs_searchSpace, bfs_reversePath, bfs_forwardPath = BFS(myMaze)
     dfs_searchSpace, dfs_reversePath, dfs_forwardPath = DFS(myMaze)
@@ -16,16 +16,21 @@ if __name__ == '__main__':
     
     agent_BFS = agent(myMaze, footprints=True, shape='square', filled=True,color = COLOR.green)
     agent_DFS = agent(myMaze, footprints=True, shape='square', filled=True, color = COLOR.blue)
-    agent_Astar = agent(myMaze, footprints=True, shape='square', color = COLOR.yellow)
+    agent_Astar = agent(myMaze, footprints=True, shape='square', color = COLOR.red)
 
     myMaze.tracePath({agent_BFS:bfs_forwardPath}, delay=100)
     myMaze.tracePath({agent_DFS:dfs_forwardPath}, delay=100)
     myMaze.tracePath({agent_Astar:astar_forwardPath}, delay=100)
 
     #path length
-    bfs_pathLength = textLabel(myMaze, "BFS PathLength ", len(bfs_forwardPath)+1)
-    dfs_pathLength = textLabel(myMaze, "DFS PathLength ", len(dfs_forwardPath)+1)
-    astar_pathLength = textLabel(myMaze, "Astar PathLength ", len(astar_forwardPath)+1)
+    bfs_pathLength = textLabel(myMaze, "BFS PathLength ", len(bfs_forwardPath))
+    dfs_pathLength = textLabel(myMaze, "DFS PathLength ", len(dfs_forwardPath))
+    astar_pathLength = textLabel(myMaze, "Astar PathLength ", len(astar_forwardPath))
+
+    #states explored
+    bfs_searchSpac = textLabel(myMaze, "BFS search space ", len(bfs_searchSpace))
+    dfs_searchSpac = textLabel(myMaze, "DFS search space ", len(dfs_searchSpace))
+    astar_searchSpac = textLabel(myMaze, "Astar search space ", len(astar_searchSpace))
 
     #time
     #bfs_time = textLabel(myMaze, "BFS timetaken: ", timeit(stmt = "BFS(myMaze)", number = 10, globals = globals()))
@@ -48,9 +53,9 @@ if __name__ == '__main__':
 
     #plt.savefig("../memory_usage_plot.png")
 
-    bfs_memory_label = textLabel(myMaze, "BFS max memory usage: ", f"{max(bfs_memory):.2f} MB")
-    dfs_memory_label = textLabel(myMaze, "DFS max memory usage: ", f"{max(dfs_memory):.2f} MB")
-    astar_memory_label = textLabel(myMaze, "Astar max memory usage: ", f"{max(astar_memory):.2f} MB")
+    #bfs_memory_label = textLabel(myMaze, "BFS max memory usage: ", f"{max(bfs_memory):.2f} MB")
+    #dfs_memory_label = textLabel(myMaze, "DFS max memory usage: ", f"{max(dfs_memory):.2f} MB")
+    #astar_memory_label = textLabel(myMaze, "Astar max memory usage: ", f"{max(astar_memory):.2f} MB")
 
     myMaze.run()
 

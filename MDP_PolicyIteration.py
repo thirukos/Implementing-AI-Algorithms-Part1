@@ -36,6 +36,7 @@ def compute_path(start_cell, target_cell, policy):
 
         current_cell = (x, y)
         path.append(current_cell)
+        print(current_cell)
     return path
 
 def policy_evaluation(m, policy, values, target_cell, discount_factor, threshold):
@@ -153,18 +154,18 @@ def policy_iteration(m, start_cell=None, target_cell=None, discount_factor=0.9, 
 
 if __name__ == '__main__':
     m = maze()
-    m.CreateMaze(loadMaze="maze--2023-03-09--11-37-25.csv") # loop percentage = 80% 
+    m.CreateMaze(loadMaze="maze--2023-03-12--09-33-14.csv") # loop percentage = 80% 
     
-    forwardPath, iteration = policy_iteration(m, discount_factor = 0.9, threshold = 1e-3)
+    forwardPath, iteration = policy_iteration(m, discount_factor = 0.5, threshold = 1e-3)
 
     a = agent( m, footprints=True, filled=True, color = COLOR.green)
     m.tracePath({a:forwardPath}, delay=50)
 
     vitime = timeit(stmt = "policy_iteration(m)", number = 10, globals = globals())
-    time = textLabel(m, "Timetaken to solve the 30X30 maze, using MDP value iteration: ", vitime)
+    #time = textLabel(m, "timetaken to solve the 30x30 maze, using mdp value iteration: ", vitime)
 
-    pathLength = textLabel(m, "Length of the path ", len(forwardPath)+1)
-    VIiteration = textLabel(m, "Total Iteration ", iteration)
+    #pathLength = textLabel(m, "Length of the path ", len(forwardPath)+1)
+    #VIiteration = textLabel(m, "Total Iteration ", iteration)
 
 
     m.run()

@@ -29,10 +29,6 @@ def value_iteration(m, start_cell = None, target_cell = None, discount_factor = 
     for i in cells:
         x, y = i
         actions[i] = get_available_actions(m, x, y)
-    #for x in range(1, m.rows+1):
-    #    for y in range(1, m.cols+1):
-    #        current_cell = (x, y)
-    #        actions[current_cell] = get_available_actions(m, x, y)
 
     policy = {}
     for i in actions.keys():
@@ -70,6 +66,7 @@ def value_iteration(m, start_cell = None, target_cell = None, discount_factor = 
 
             values[i] = curr_value
             diff = max(diff, np.abs(prev_value - values[i]))
+            #print(diff)
 
         if diff < threshold:
             break
@@ -92,6 +89,7 @@ def value_iteration(m, start_cell = None, target_cell = None, discount_factor = 
             currentCell = (currentCell[0]+1, currentCell[1])
 
         value_iter_path.append(currentCell)
+        print(currentCell)
 
         if currentCell == target_cell:
             break
@@ -99,16 +97,16 @@ def value_iteration(m, start_cell = None, target_cell = None, discount_factor = 
     return value_iter_path, iteration
 
 if __name__ == '__main__':
-    m = maze(30, 30)
-    m.CreateMaze(loadMaze="maze--2023-03-09--11-37-25.csv") # loop percentage = 80% 
+    m = maze()
+    m.CreateMaze(loadMaze="maze--2023-03-12--09-33-14.csv") # loop percentage = 80% 
     
     forwardPath, iteration = value_iteration(m, discount_factor = 0.9, threshold = 1e-3)
 
     a = agent( m, footprints=True, filled=True, color = COLOR.green)
     m.tracePath({a:forwardPath}, delay=50)
 
-    vitime = timeit(stmt = "value_iteration(m)", number = 10, globals = globals())
-    time = textLabel(m, "Timetaken to solve the 30X30 maze, using MDP value iteration: ", vitime)
+    #vitime = timeit(stmt = "value_iteration(m)", number = 10, globals = globals())
+    #time = textLabel(m, "Timetaken to solve the 30X30 maze, using MDP value iteration: ", vitime)
 
     pathLength = textLabel(m, "Length of the path ", len(forwardPath)+1)
     VIiteration = textLabel(m, "Total Iteration ", iteration)

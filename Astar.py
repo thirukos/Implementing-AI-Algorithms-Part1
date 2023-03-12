@@ -1,19 +1,29 @@
-#Astar, informed heuristic search algorithm
-#f(n) - cost of the cell
-#g(n) - cost of the path from start node to n node (number of steps taken from start to n)
-#h(n) - estimated cost to reach to the goal node from n node (estiamted number of steps taken from n to goal)
-
 from pyMaze import maze, agent, COLOR, textLabel
 import time
 from queue import PriorityQueue
 from timeit import timeit
+from memory_profiler import memory_usage
+
+import math
+
+def EuclideanDist(cell1, cell2):
+    x1, y1 = cell1
+    x2, y2 = cell2
+    return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+
+def DiagonalDist(cell1, cell2):
+    x1, y1 = cell1
+    x2, y2 = cell2
+    dx = abs(x1 - x2)
+    dy = abs(y1 - y2)
+    return dx + dy + (math.sqrt(2) - 2) * min(dx, dy)
 
 def ManhattanDist(cell1, cell2):
     x1, y1 = cell1
     x2, y2 = cell2
     return abs(x1-x2) + abs(y1-y2)
 
-def Astar(m,start=None):
+def Astar(m,start=None, heuristics = "Manhattan"):
     if start is None:
         start=(m.rows,m.cols)
     aStarSearch=[start]
@@ -21,10 +31,28 @@ def Astar(m,start=None):
     gn = {row: float("inf") for row in m.grid}
     gn[start] = 0
     fn = {row: float("inf") for row in m.grid}
-    fn[start] = ManhattanDist(start, m._goal)	
+
+    if heuristics is "Manhattan":
+        fn[start] = ManhattanDist(start, m._goal)	
+
+    if heuristics is "Euclidean":
+        fn[start] = EuclideanDist(start, m._goal)
+
+    if heuristics is "Diagonal":
+        fn[start] = DiagonalDist(start, m._goal)
 	
     pq = PriorityQueue()
+
     pq.put((ManhattanDist(start, m._goal), ManhattanDist(start, m._goal), start))
+
+    if heuristics is "Manhattan":
+        pq.put((ManhattanDist(start, m._goal), ManhattanDist(start, m._goal), start))
+
+    if heuristics is "Euclidean":
+        pq.put((EuclideanDist(start, m._goal), EuclideanDist(start, m._goal), start))
+
+    if heuristics is "Diagonal":
+        pq.put((DiagonalDist(start, m._goal), DiagonalDist(start, m._goal), start))
 	
     
     while not pq.empty():
@@ -52,6 +80,36 @@ def Astar(m,start=None):
                     fn[childCell] = temp_gn + ManhattanDist(childCell, m._goal)
                     pq.put((fn[childCell], ManhattanDist(childCell, m._goal), childCell))
 
+                if heuristics is "Manhattan":
+                    temp_gn = gn[currentCell] + 1
+                    temp_fn = temp_gn + ManhattanDist(childCell, m._goal)
+
+                    if temp_fn < fn[childCell]:   
+                        aStarPath[childCell] = currentCell
+                        gn[childCell] = temp_gn
+                        fn[childCell] = temp_gn + ManhattanDist(childCell, m._goal)
+                        pq.put((fn[childCell], ManhattanDist(childCell, m._goal), childCell))
+
+                if heuristics is "Euclidean":
+                    temp_gn = gn[currentCell] + 1
+                    temp_fn = temp_gn + EuclideanDist(childCell, m._goal)
+
+                    if temp_fn < fn[childCell]:   
+                        aStarPath[childCell] = currentCell
+                        gn[childCell] = temp_gn
+                        fn[childCell] = temp_gn + EuclideanDist(childCell, m._goal)
+                        pq.put((fn[childCell], EuclideanDist(childCell, m._goal), childCell))
+
+                if heuristics is "Diagonal":
+                    temp_gn = gn[currentCell] + 1
+                    temp_fn = temp_gn + DiagonalDist(childCell, m._goal)
+
+                    if temp_fn < fn[childCell]:   
+                        aStarPath[childCell] = currentCell
+                        gn[childCell] = temp_gn
+                        fn[childCell] = temp_gn + DiagonalDist(childCell, m._goal)
+                        pq.put((fn[childCell], DiagonalDist(childCell, m._goal), childCell))
+
 
     forwardPath={}
     cell=m._goal
@@ -62,10 +120,10 @@ def Astar(m,start=None):
 
 if __name__ == '__main__':
     #start_time = time.time()
-    m = maze(30, 30)
-    m.CreateMaze(loadMaze="maze--2023-03-09--11-37-25.csv") # loop percentage = 80% 
+    m = maze()
+    m.CreateMaze(loadMaze="maze--2023-03-12--09-33-14.csv") # loop percentage = 80% 
 
-    searchSpace, reversePath, forwardPath = Astar(m)
+    searchSpace, reversePath, forwardPath = Astar(m, heuristics="Manhattan")
 
     a = agent(m, footprints=True, shape='square', color = COLOR.yellow)
     b = agent(m, footprints=True, filled=True, color=COLOR.green)
@@ -75,8 +133,13 @@ if __name__ == '__main__':
 
     #elapsed_time = time.time() - start_time
     AstarTime = timeit(stmt = "Astar(m)", number = 10, globals = globals())
-    time = textLabel(m, "Timetaken to solve the 30X30 maze, using A star algorithm: ", AstarTime)
-    pathLength = textLabel(m, "Length of the path ", len(forwardPath)+1)
-    searchSpace = textLabel(m, "Total cells searched ", len(searchSpace)+1)
+    #time = textLabel(m, "Timetaken: ", AstarTime)
+    #pathLength = textLabel(m, "Length of the path ", len(forwardPath))
+    #searchSpace = textLabel(m, "Total cells searched ", len(searchSpace))
+
+    astar_memory = memory_usage((Astar, (m,), {'heuristics': 'Manhattan'}))
+
+    #astar_memory_label = textLabel(m, "Astar memory: ", f"{max(astar_memory):.2f} MB")
+
     m.run()
 
